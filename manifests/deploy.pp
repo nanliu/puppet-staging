@@ -9,6 +9,8 @@ define staging::deploy (
   $environment  = undef, #: environment variable for settings such as http_proxy
   $strip        = undef, #: extract file with the --strip=X option. Only works with GNU tar.
   $timeout      = undef, #: the time to wait for the file transfer to complete
+  $tries        = undef, #: amount of retries for the file transfer when non transient connection errors exist
+  $try_sleep    = undef, #: time to wait between retries for the file transfer
   $user         = undef, #: extract file as this user
   $group        = undef, #: extract group as this group
   $creates      = undef, #: the file/folder created after extraction. if unspecified defaults to ${target}/${name}
@@ -25,6 +27,8 @@ define staging::deploy (
     environment => $environment,
     subdir      => $caller_module_name,
     timeout     => $timeout,
+    tries       => $tries,
+    try_sleep   => $try_sleep,
   }
 
   staging::extract { $name:
