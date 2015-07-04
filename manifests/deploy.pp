@@ -16,7 +16,14 @@ define staging::deploy (
   $onlyif       = undef  #: alternative way to conditionally extract file
 ) {
 
-  staging::file { $name:
+  # grab file name if path was passed in
+  if $name =~ /.*\/(.*)/ {
+    $file_name = $1
+  } else {
+    $file_name = $name
+  }
+
+  staging::file { $file_name:
     source      => $source,
     target      => $staging_path,
     username    => $username,
@@ -27,7 +34,7 @@ define staging::deploy (
     timeout     => $timeout,
   }
 
-  staging::extract { $name:
+  staging::extract { $file_name:
     target      => $target,
     source      => $staging_path,
     user        => $user,
@@ -38,7 +45,7 @@ define staging::deploy (
     creates     => $creates,
     unless      => $unless,
     onlyif      => $onlyif,
-    require     => Staging::File[$name],
+    require     => Staging::File[$file_name],
   }
 
 }
