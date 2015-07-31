@@ -98,6 +98,10 @@ define staging::extract (
       $command = "jar xf ${source_path}"
     }
 
+    /.iso$/: {
+      $command = "mkdir /tmp/stagefrite ; mount -o loop ${source_path} /tmp/stagefrite ; cp -r /mnt/.[a-zA-Z]* . ; cp -r /tmp/stagefrite/* . ; rmdir /tmp/stagefrite"
+    }
+
     default: {
       fail("staging::extract: unsupported file format ${name}.")
     }
